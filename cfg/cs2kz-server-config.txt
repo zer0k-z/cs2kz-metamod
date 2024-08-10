@@ -6,7 +6,7 @@
 	"tipInterval"				"75"
 	"defaultJSBroadcastMinTier"	"4"
 	"defaultJSSoundMinTier"		"4"
-	"defaultShowJS"				"true"
+	"defaultShowJS"				"false"
 
 	"chatPrefix"				"{lime}KZ {grey}|{default}"
 	"db"
