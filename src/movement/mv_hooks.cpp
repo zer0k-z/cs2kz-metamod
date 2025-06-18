@@ -13,6 +13,10 @@ CUtlVector<TraceHistory> traceHistory;
 #endif
 extern CGameConfig *g_pGameConfig;
 
+extern Vector lastServerPosition;
+extern Vector lastServerVelocity;
+extern f32 lastServerTime;
+
 void movement::InitDetours()
 {
 	INIT_DETOUR(g_pGameConfig, PhysicsSimulate);
@@ -107,6 +111,9 @@ void FASTCALL movement::Detour_ProcessMovement(CCSPlayer_MovementServices *ms, C
 	ProcessMovement(ms, mv);
 	player->moveDataPost = CMoveData(*mv);
 	player->OnProcessMovementPost();
+	lastServerPosition = mv->m_vecAbsOrigin;
+	lastServerVelocity = mv->m_vecVelocity;
+	lastServerTime = g_pKZUtils->GetServerGlobals()->curtime;
 }
 
 bool FASTCALL movement::Detour_PlayerMove(CCSPlayer_MovementServices *ms, CMoveData *mv)

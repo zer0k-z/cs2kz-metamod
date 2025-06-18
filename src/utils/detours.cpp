@@ -8,8 +8,8 @@
 #include "fmtstr.h"
 #include "tier0/memdbgon.h"
 #include "sdk/physicsgamesystem.h"
+#include "convar.h"
 
-CUtlVector<CDetourBase *> g_vecDetours;
 extern CGameConfig *g_pGameConfig;
 
 DECLARE_DETOUR(RecvServerBrowserPacket, Detour_RecvServerBrowserPacket);
@@ -17,6 +17,7 @@ DECLARE_DETOUR(RecvServerBrowserPacket, Detour_RecvServerBrowserPacket);
 DECLARE_DETOUR(TraceShape, Detour_TraceShape);
 DECLARE_DETOUR(CPhysicsGameSystemFrameBoundary, Detour_CPhysicsGameSystemFrameBoundary);
 
+DECLARE_DETOUR(MainLoop, Detour_MainLoop);
 DECLARE_MOVEMENT_DETOUR(PhysicsSimulate);
 DECLARE_MOVEMENT_DETOUR(ProcessUsercmds);
 DECLARE_MOVEMENT_DETOUR(GetMaxSpeed);
@@ -53,6 +54,8 @@ void InitDetours()
 	INIT_DETOUR(g_pGameConfig, TraceShape);
 	TraceShape.DisableDetour();
 #endif
+	MainLoop.CreateDetour(g_pGameConfig);
+	MainLoop.EnableDetour();
 }
 
 void FlushAllDetours()
@@ -141,4 +144,25 @@ void Detour_CPhysicsGameSystemFrameBoundary(void *pThis)
 {
 	CPhysicsGameSystemFrameBoundary(pThis);
 	KZ::misc::OnPhysicsGameSystemFrameBoundary(pThis);
+}
+
+CConVar<bool> g_EnableViewDebug("kz_enable_view_debug", FCVAR_NONE, "help string", false);
+Vector lastServerPosition;
+Vector lastServerVelocity;
+f32 lastServerTime;
+Vector viewOrigin;
+#include "addresses.h"
+
+u64 Detour_MainLoop(void *a1, f64 a2)
+{
+	f64 engineTime = Plat_FloatTime();
+	u64 result = MainLoop(a1, a2);
+	if (g_EnableViewDebug.Get())
+	{
+		uintptr_t originptr = ((uintptr_t)modules::client->m_base) + 0x1A68738;
+		viewOrigin = *(Vector *)originptr;
+		META_CONPRINTF("%f %s %s %s %f\n", engineTime, VecToString(viewOrigin), VecToString(lastServerPosition), VecToString(lastServerVelocity),
+					   lastServerTime);
+	}
+	return result;
 }

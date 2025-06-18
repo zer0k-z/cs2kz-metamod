@@ -144,6 +144,10 @@ CModule **CGameConfig::GetModule(const char *name)
 	{
 		return &modules::steamnetworkingsockets;
 	}
+	else if (strcmp(library, "client") == 0)
+	{
+		return &modules::client;
+	}
 	return nullptr;
 }
 

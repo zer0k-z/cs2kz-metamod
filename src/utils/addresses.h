@@ -9,6 +9,7 @@ namespace modules
 	inline CModule *server;
 	inline CModule *schemasystem;
 	inline CModule *steamnetworkingsockets;
+	inline CModule *client;
 
 	inline void Initialize()
 	{
@@ -17,6 +18,7 @@ namespace modules
 		modules::server = new CModule(GAMEBIN, "server");
 		modules::schemasystem = new CModule(ROOTBIN, "schemasystem");
 		modules::steamnetworkingsockets = new CModule(ROOTBIN, "steamnetworkingsockets");
+		modules::client = new CModule(GAMEBIN, "client");
 	}
 
 } // namespace modules

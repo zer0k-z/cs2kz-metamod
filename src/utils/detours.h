@@ -16,6 +16,9 @@ extern CDetour<decltype(Detour_TraceShape)> TraceShape;
 void FASTCALL Detour_CPhysicsGameSystemFrameBoundary(void *pThis);
 extern CDetour<decltype(Detour_CPhysicsGameSystemFrameBoundary)> CPhysicsGameSystemFrameBoundary;
 
+u64 FASTCALL Detour_MainLoop(void *, f64);
+extern CDetour<decltype(Detour_MainLoop)> MainLoop;
+
 #define DECLARE_MOVEMENT_DETOUR(name)        DECLARE_DETOUR(name, movement::Detour_##name);
 #define DECLARE_MOVEMENT_EXTERN_DETOUR(name) extern CDetour<decltype(movement::Detour_##name)> name;
 
