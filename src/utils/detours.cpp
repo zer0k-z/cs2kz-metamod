@@ -10,6 +10,7 @@
 #include "sdk/physicsgamesystem.h"
 #include "convar.h"
 
+CUtlVector<CDetourBase *> g_vecDetours;
 extern CGameConfig *g_pGameConfig;
 
 DECLARE_DETOUR(RecvServerBrowserPacket, Detour_RecvServerBrowserPacket);
