@@ -84,6 +84,10 @@ void KZPistolService::UpdatePistol()
 		// Check the player's inventory. If there's a skin on this current team, don't switch. Otherwise, switch team.
 		bool checkOtherTeam = true;
 		CCSPlayerInventory *inventory = this->player->GetController()->m_pInventoryServices()->GetInventory();
+		if (inventory->m_pSOCache)
+		{
+			META_CONPRINTF("%s has elevated status: %d\n", player->GetName(), inventory->m_pSOCache->HasElevatedStatus());
+		}
 		// LOADOUT_POSITION_SECONDARY0 to LOADOUT_POSITION_SECONDARY5
 		for (i32 i = 2; i <= 7; i++)
 		{
