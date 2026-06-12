@@ -53,6 +53,11 @@ enum DistanceTier : u8
 #define JS_FAILSTATS_MAX_TRACKED_TICKS 512
 #define JS_OFFSET_EPSILON              0.04f
 
+// Fixed-point scale used when storing jumpstats floats (distance/speed/sync/airtime) as integers in the database.
+#define JS_DB_SCALE 10000.0
+// Highest savable/rankable jump type (LongJump..Jumpbug = 7 types).
+#define JS_MAX_SAVED_JUMPTYPE JumpType_Jumpbug
+
 extern const char *jumpTypeStr[JUMPTYPE_COUNT];
 extern const char *jumpTypeShortStr[JUMPTYPE_COUNT];
 extern const char *distanceTierColors[DISTANCETIER_COUNT];
@@ -537,6 +542,7 @@ public:
 	void AddJump();
 	void UpdateJump();
 	void EndJump();
+	void SaveJumpstatToDatabase(Jump *jump);
 	void HandleTeleport();
 	void InvalidateJumpstats(const char *reason = NULL);
 	void OnAirAccelerate();

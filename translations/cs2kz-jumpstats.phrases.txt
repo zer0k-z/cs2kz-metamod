@@ -1086,4 +1086,92 @@
 		"ru"		"{grey}Отображение проваленных прыжков в консоли выключено."
 		"ua"		"{grey}Показ статистики невдалих стрибків в консолі вимкнено."
 	}
+
+	// =====[ LEADERBOARD ]=====
+	"Jumpstats - Database Not Ready"
+	{
+		"en"		"{grey}The database is not ready yet. Try again later."
+	}
+	"Jumpstats - Invalid Mode"
+	{
+		"en"		"{grey}Invalid mode."
+	}
+	"Jumpstats Top - No Records"
+	{
+		"en"		"{grey}No jumpstats records found."
+	}
+	"Jumpstats Top - Check Console"
+	{
+		"en"		"{grey}Jumpstats top data retrieved. Check console for details!"
+	}
+	"Jumpstats Top - Title"
+	{
+		"#format"	"jump_type:s,mode_name:s,category:s"
+		"en"		"{jump_type} {mode_name} {category} Top"
+	}
+	"Jumpstats Top - Distance Mode"
+	{
+		"en"		"Distance"
+	}
+	"Jumpstats Top - Block Mode"
+	{
+		"en"		"Block"
+	}
+	"Jumpstats Top - Rank"
+	{
+		"en"		"Rank"
+	}
+	"Jumpstats Top - Player"
+	{
+		"en"		"Player"
+	}
+	"Jumpstats Top - Distance"
+	{
+		"en"		"Distance"
+	}
+	"Jumpstats Top - Block"
+	{
+		"en"		"Block"
+	}
+	"Jumpstats Top - Strafes"
+	{
+		"en"		"Strafes"
+	}
+	"Jumpstats Top - Sync"
+	{
+		"en"		"Sync"
+	}
+	"Jumpstats Top - ID"
+	{
+		"en"		"ID"
+	}
+	"Jumpstats PB - Title"
+	{
+		"#format"	"mode_name:s"
+		"en"		"{mode_name} Jumpstats Personal Bests"
+	}
+	"Jumpstats PB - Type"
+	{
+		"en"		"Type"
+	}
+	"Jumpstats PB - Block"
+	{
+		"en"		"Block"
+	}
+	"Jumpstats PB - Distance"
+	{
+		"en"		"Distance"
+	}
+	"Jumpstats PB - Strafes"
+	{
+		"en"		"Strafes"
+	}
+	"Jumpstats PB - Sync"
+	{
+		"en"		"Sync"
+	}
+	"Jumpstats PB - ID"
+	{
+		"en"		"ID"
+	}
 }

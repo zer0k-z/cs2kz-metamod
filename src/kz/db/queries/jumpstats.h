@@ -41,8 +41,8 @@ constexpr char mysql_jumpstats_create[] = R"(
 )";
 
 constexpr char sql_jumpstats_insert[] = R"(
-    INSERT INTO Jumpstats (SteamID64, JumpType, Mode, Distance, IsBlockJump, Block, Strafes, Sync, Pre, Max, Airtime) 
-        VALUES (%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d)
+    INSERT INTO Jumpstats (ID, SteamID64, JumpType, Mode, Distance, IsBlockJump, Block, Strafes, Sync, Pre, Max, Airtime) 
+        VALUES ('%s', %llu, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d)
 )";
 
 constexpr char sql_jumpstats_update[] = R"(
@@ -109,7 +109,7 @@ constexpr char sql_jumpstats_deletejump[] = R"(
         FROM 
             Jumpstats 
         WHERE 
-            ID = %d;
+            ID = '%s';
 )";
 
 constexpr char sql_jumpstats_getpbs[] = R"(
@@ -235,4 +235,42 @@ constexpr char sql_jumpstats_ranking_getblockpbs[] = R"(
         ) b ON b.JumpType=c.JumpType AND b.Block=c.Block AND b.Distance=c.Distance 
         WHERE b.SteamID64=c.SteamID64 AND b.Mode=c.Mode AND c.IsBlockJump 
         ORDER BY c.JumpType
+)";
+
+// Migration queries to convert Jumpstats.ID to use UUID v7 strings
+constexpr char mysql_jumpstats_alter_id_column[] = R"(
+    ALTER TABLE Jumpstats MODIFY COLUMN ID VARCHAR(36) NOT NULL
+)";
+
+constexpr char sqlite_jumpstats_alter_id_column_1[] = R"(
+    CREATE TABLE Jumpstats_New ( 
+        ID TEXT NOT NULL, 
+        SteamID64 INTEGER NOT NULL, 
+        JumpType INTEGER NOT NULL, 
+        Mode INTEGER NOT NULL, 
+        Distance INTEGER NOT NULL, 
+        IsBlockJump INTEGER NOT NULL, 
+        Block INTEGER NOT NULL, 
+        Strafes INTEGER NOT NULL, 
+        Sync INTEGER NOT NULL, 
+        Pre INTEGER NOT NULL, 
+        Max INTEGER NOT NULL, 
+        Airtime INTEGER NOT NULL, 
+        Created INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+        CONSTRAINT PK_Jumpstats_New PRIMARY KEY (ID), 
+        CONSTRAINT FK_Jumpstats_New_SteamID64 FOREIGN KEY (SteamID64) REFERENCES Players(SteamID64) 
+        ON UPDATE CASCADE ON DELETE CASCADE)
+)";
+
+constexpr char sqlite_jumpstats_alter_id_column_2[] = R"(
+    INSERT INTO Jumpstats_New (ID, SteamID64, JumpType, Mode, Distance, IsBlockJump, Block, Strafes, Sync, Pre, Max, Airtime, Created)
+    SELECT CAST(ID as TEXT), SteamID64, JumpType, Mode, Distance, IsBlockJump, Block, Strafes, Sync, Pre, Max, Airtime, Created FROM Jumpstats
+)";
+
+constexpr char sqlite_jumpstats_alter_id_column_3[] = R"(
+    DROP TABLE Jumpstats
+)";
+
+constexpr char sqlite_jumpstats_alter_id_column_4[] = R"(
+    ALTER TABLE Jumpstats_New RENAME TO Jumpstats
 )";

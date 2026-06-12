@@ -148,6 +148,17 @@ public:
 	static void QueryRecords(CUtlString mapName, CUtlString courseName, u32 modeID, u32 count, u32 offset, TransactionSuccessCallbackFunc onSuccess,
 							 TransactionFailureCallbackFunc onFailure);
 
+	// Jumpstats
+	static void SaveJumpstatPB(u64 steamID64, const char *jumpUUID, JumpType jumpType, i32 modeID, bool isBlock, f32 distance, i32 block, i32 strafes,
+							   f32 sync, f32 pre, f32 max, f32 airtime);
+	static void QueryJumpstatTop(JumpType jumpType, i32 modeID, bool isBlock, u32 count, TransactionSuccessCallbackFunc onSuccess,
+								 TransactionFailureCallbackFunc onFailure);
+	static void QueryJumpstatPBs(u64 steamID64, i32 modeID, TransactionSuccessCallbackFunc onSuccess, TransactionFailureCallbackFunc onFailure);
+	static void DeleteJump(const char *jumpUUID, TransactionSuccessCallbackFunc onSuccess = OnGenericTxnSuccess,
+						   TransactionFailureCallbackFunc onFailure = OnGenericTxnFailure);
+	static void DeleteAllJumps(u64 steamID64, TransactionSuccessCallbackFunc onSuccess = OnGenericTxnSuccess,
+							   TransactionFailureCallbackFunc onFailure = OnGenericTxnFailure);
+
 	static void Ban(u64 steamID64, const char *reason = nullptr, f32 duration = 0.0f, const UUID_t banId = UUID_t(false),
 					const UUID_t replayUuid = UUID_t(false), TransactionSuccessCallbackFunc onSuccess = OnGenericTxnSuccess,
 					TransactionFailureCallbackFunc onFailure = OnGenericTxnFailure);

@@ -11,6 +11,7 @@
 #include "kz/trigger/kz_trigger.h"
 #include "kz/recording/kz_recording.h"
 #include "kz/replays/kz_replaysystem.h"
+#include "kz/db/kz_db.h"
 #include "tier0/memdbgon.h"
 
 // clang-format off
@@ -1017,6 +1018,38 @@ void KZJumpstatsService::EndJump()
 	KZJumpstatsService::AnnounceJump(jump);
 	this->player->recordingService->OnJumpFinish(jump);
 	this->player->anticheatService->OnJumpFinish(jump);
+	this->SaveJumpstatToDatabase(jump);
+}
+
+void KZJumpstatsService::SaveJumpstatToDatabase(Jump *jump)
+{
+	// Mirror the recording service's gate so the database row reuses the same UUID as a potential replay.
+	if (jump->IsFailstat() || !jump->IsValid() || jump->GetOffset() < -JS_EPSILON)
+	{
+		return;
+	}
+	// No styled jumps.
+	if (this->player->styleServices.Count() > 0)
+	{
+		return;
+	}
+	JumpType jumpType = jump->GetJumpType();
+	if (jumpType < JumpType_LongJump || jumpType > JS_MAX_SAVED_JUMPTYPE)
+	{
+		return;
+	}
+	i32 modeID = KZ::mode::GetModeInfo(this->player->modeService).databaseID;
+	if (modeID <= 0)
+	{
+		return;
+	}
+	i32 block = (i32)round(jump->GetBlock());
+	bool isLadder = jumpType == JumpType_LadderJump || jumpType == JumpType_Ladderhop;
+	bool isBlock = block >= (isLadder ? JS_MIN_LAJ_BLOCK_DISTANCE : JS_MIN_BLOCK_DISTANCE);
+
+	UUID_t uuid = this->player->recordingService->GetLastJumpUUID();
+	KZDatabaseService::SaveJumpstatPB(this->player->GetSteamId64(), uuid.ToString().c_str(), jumpType, modeID, isBlock, jump->GetDistance(), block,
+									  jump->GetStrafeCount(), jump->GetSync(), jump->GetTakeoffSpeed(), jump->GetMaxSpeed(), jump->airtime);
 }
 
 void KZJumpstatsService::HandleTeleport()
