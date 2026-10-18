@@ -23,6 +23,7 @@
 #include "kz/kz.h"
 #include "kz/anticheat/kz_anticheat.h"
 #include "kz/beam/kz_beam.h"
+#include "kz/bhoptest/kz_bhoptest.h"
 #include "kz/language/kz_language.h"
 #include "kz/hud/kz_hud.h"
 #include "kz/jumpstats/kz_jumpstats.h"
@@ -695,6 +696,7 @@ static KHook::Return<void> PlayerRunCommandPre(CCSPlayer_MovementServices *pThis
 {
 	VPROF_BUDGET(__func__, "CS2KZ");
 	KZPlayer *player = g_pKZPlayerManager->ToPlayer(pThis);
+	player->bhopTestService->OnPlayerRunCommandPre(pCmd);
 	if (!player->OnPlayerRunCommand(pCmd))
 	{
 		return {KHook::Action::Supersede};

@@ -32,6 +32,7 @@
 #include "pistol/kz_pistol.h"
 #include "fov/kz_fov.h"
 #include "ztopwatch/kz_ztopwatch.h"
+#include "bhoptest/kz_bhoptest.h"
 
 #include "sdk/datatypes.h"
 #include "sdk/entity/cbasetrigger.h"
@@ -70,6 +71,7 @@ void KZPlayer::DestroyServices()
 	delete this->pistolService;
 	delete this->fovService;
 	delete this->ztopwatchService;
+	delete this->bhopTestService;
 	delete this->modeService;
 
 	this->anticheatService = nullptr;
@@ -98,6 +100,7 @@ void KZPlayer::DestroyServices()
 	this->pistolService = nullptr;
 	this->fovService = nullptr;
 	this->ztopwatchService = nullptr;
+	this->bhopTestService = nullptr;
 	this->modeService = nullptr;
 
 	this->styleServices.PurgeAndDeleteElements();
@@ -136,6 +139,7 @@ void KZPlayer::Init()
 	this->fovService = new KZFOVService(this);
 	this->ztopwatchService = new KZZtopwatchService(this);
 	this->uiService = new KZUIService(this);
+	this->bhopTestService = new KZBhopTestService(this);
 
 	KZ::mode::InitModeService(this);
 }
@@ -168,6 +172,7 @@ void KZPlayer::Reset()
 	this->recordingService->Reset();
 	this->paintService->Reset();
 	this->ztopwatchService->Reset();
+	this->bhopTestService->Reset();
 	this->profileService->Reset();
 	this->pistolService->Reset();
 
@@ -357,6 +362,7 @@ void KZPlayer::OnProcessMovement()
 {
 	VPROF_BUDGET(__func__, "CS2KZ");
 	MovementPlayer::OnProcessMovement();
+	this->bhopTestService->OnProcessMovement();
 
 	KZ::mode::ApplyModeSettings(this);
 	KZ::replaysystem::OnProcessMovement(this);
@@ -390,6 +396,7 @@ void KZPlayer::OnProcessMovementPost()
 	KZ::replaysystem::OnProcessMovementPost(this);
 	this->ztopwatchService->OnProcessMovementPost();
 	this->hudService->OnProcessMovementPost();
+	this->bhopTestService->OnProcessMovementPost();
 	MovementPlayer::OnProcessMovementPost();
 }
 
@@ -637,6 +644,7 @@ void KZPlayer::OnCheckJumpButtonLegacyPost()
 void KZPlayer::OnCheckJumpButtonModern()
 {
 	VPROF_BUDGET(__func__, "CS2KZ");
+	this->bhopTestService->OnCheckJumpButtonModern();
 	this->modeService->OnCheckJumpButtonModern();
 	FOR_EACH_VEC(this->styleServices, i)
 	{
@@ -683,6 +691,7 @@ void KZPlayer::OnJumpLegacyPost()
 void KZPlayer::OnJumpModern()
 {
 	VPROF_BUDGET(__func__, "CS2KZ");
+	this->bhopTestService->OnJumpModern();
 	this->telemetryService->OnJumpModern();
 	this->modeService->OnJumpModern();
 	FOR_EACH_VEC(this->styleServices, i)
@@ -695,6 +704,7 @@ void KZPlayer::OnJumpModern()
 void KZPlayer::OnJumpModernPost()
 {
 	VPROF_BUDGET(__func__, "CS2KZ");
+	this->bhopTestService->OnJumpModernPost();
 	this->telemetryService->OnJumpModernPost();
 	this->modeService->OnJumpModernPost();
 	FOR_EACH_VEC(this->styleServices, i)
@@ -767,6 +777,7 @@ void KZPlayer::OnFrictionPost()
 void KZPlayer::OnWalkMove()
 {
 	VPROF_BUDGET(__func__, "CS2KZ");
+	this->bhopTestService->OnWalkMove();
 	this->modeService->OnWalkMove();
 	FOR_EACH_VEC(this->styleServices, i)
 	{
@@ -910,6 +921,7 @@ void KZPlayer::OnPostThinkPost()
 void KZPlayer::OnStartTouchGround()
 {
 	VPROF_BUDGET(__func__, "CS2KZ");
+	this->bhopTestService->OnStartTouchGround();
 	this->anticheatService->CreateLandEvent();
 	this->jumpstatsService->EndJump();
 	this->timerService->OnStartTouchGround();

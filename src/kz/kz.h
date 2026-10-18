@@ -59,6 +59,7 @@ class KZPistolService;
 class KZRecordingService;
 class KZFOVService;
 class KZZtopwatchService;
+class KZBhopTestService;
 
 class KZPlayer : public MovementPlayer
 {
@@ -200,6 +201,7 @@ public:
 	KZRecordingService *recordingService {};
 	KZFOVService *fovService {};
 	KZZtopwatchService *ztopwatchService {};
+	KZBhopTestService *bhopTestService {};
 
 	// Timestamp (curtime) of the last accepted scmd command, used for the per-command cooldown.
 	f32 lastCommandTime {};
